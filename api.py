@@ -19,3 +19,10 @@ class Api(Password):
         response = get('https://api.pwnedpasswords.com/range/' + self.sha_password[:5].upper())
         api_answer = response.text
         return api_answer
+
+    def check_if_password_not_in_api(self):
+        response = self.connect_with_api()
+        if self.convert_password_into_sha()[5:].upper() in response:
+            raise ValidationException('You have to change your password!')
+
+        return True
