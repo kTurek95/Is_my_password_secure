@@ -1,11 +1,5 @@
 from api import Api
 
-# wymogi bezpiecznego hasła:
-# min 8 znaków
-# min jedna cyfra
-# min jeden znak specjalny
-# wielkie i małe litery
-
 
 def main():
     with open('passwords.txt', mode='r', encoding='utf-8') as input_file, \
