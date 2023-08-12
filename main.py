@@ -1,4 +1,25 @@
 from api import Api
+from password import ValidationException
+
+
+def validate_password(password):
+    requirements = [
+        ('correct_length', password.correct_length()),
+        ('at_least_one_number', False),
+        ('at_least_one_special_character', False),
+        ('upper_and_lower_characters', False)
+    ]
+
+    validation_errors = []
+
+    for method, _ in requirements:
+        if hasattr(password, method):
+            try:
+                requirements[requirements.index((method, _))] = (method, getattr(password, method)())
+            except ValidationException as e:
+                validation_errors.append((method, str(e)))
+
+    return all([result for _, result in requirements]), validation_errors
 
 
 def main():
@@ -6,25 +27,15 @@ def main():
             open('safe_password.txt', mode='w', encoding='utf-8') as output_file:
         for line in input_file:
             password = Api(line.strip())
-            requirements = [
-                ('correct_length', password.correct_length()),
-                ('at_least_one_number', password.at_least_one_number()),
-                ('at_least_one_special_character', password.at_least_one_special_character()),
-                ('upper_and_lower_characters', password.upper_and_lower_characters()),
-                ('check_if_password_not_in_api', password.check_if_password_not_in_api())
-            ]
-            if all([result for method, result in requirements])\
-                    and password.check_if_password_not_in_api():
+            valid, errors = validate_password(password)
+
+            if valid and password.check_if_password_not_in_api():
                 output_file.write(str(password) + '\n')
             else:
                 print(f'Hasło {str(password)} nie spełnia poniższych wymogów:')
-                for method, result in requirements:
-                    if not result:
-                        print(f' - {method}')
+                for method, error in errors:
+                    print(f' - {method}: {error}')
 
 
 if __name__ == '__main__':
-    # main()
-    api = Api('xxKacper95xx')
-    print(api.connect_with_api())
-    # print(api.convert_password_into_sha())
+    main()
