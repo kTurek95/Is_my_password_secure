@@ -3,6 +3,15 @@ from password import ValidationException
 
 
 def validate_password(password):
+    """
+    Validates the given password based on certain requirements.
+
+    Args:
+        password (Api): An instance of the Api class representing the password.
+
+    Returns:
+        tuple: A tuple containing two elements.
+    """
     requirements = [
         ('correct_length', password.correct_length()),
         ('at_least_one_number', False),
@@ -23,6 +32,11 @@ def validate_password(password):
 
 
 def main():
+    """
+    Reads passwords from 'passwords.txt', validates each password, and writes
+    valid passwords to 'safe_password.txt' while displaying validation errors
+    for invalid passwords.
+    """
     with open('passwords.txt', mode='r', encoding='utf-8') as input_file, \
             open('safe_password.txt', mode='w', encoding='utf-8') as output_file:
         for line in input_file:
