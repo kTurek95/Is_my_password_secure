@@ -13,10 +13,11 @@ def validate_password(password):
         tuple: A tuple containing two elements.
     """
     requirements = [
-        ('correct_length', password.correct_length()),
+        ('correct_length', False),
         ('at_least_one_number', False),
         ('at_least_one_special_character', False),
-        ('upper_and_lower_characters', False)
+        ('upper_and_lower_characters', False),
+        ('check_if_password_not_in_api', True)
     ]
 
     validation_errors = []
@@ -43,10 +44,10 @@ def main():
             password = Api(line.strip())
             valid, errors = validate_password(password)
 
-            if valid and password.check_if_password_not_in_api():
+            if valid:
                 output_file.write(str(password) + '\n')
             else:
-                print(f'Hasło {str(password)} nie spełnia poniższych wymogów:')
+                print(f'Password {str(password)} does not meet the following requirements:')
                 for method, error in errors:
                     print(f' - {method}: {error}')
 
