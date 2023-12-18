@@ -1,4 +1,5 @@
 """ Module with Password class """
+import string
 
 
 class ValidationException(Exception):
@@ -60,7 +61,7 @@ class Password:
         :rtype: bool
         :raises ValidationException: If at least one special character is missing.
         """
-        spec_char = '!@#$%^&*<>?|()'
+        spec_char = string.punctuation
         for letter in self.user_password:
             if letter in spec_char:
                 return True
